@@ -1,3 +1,5 @@
+//"чертеж" клиента для вывода списка друзей онлайн???
+
 package sample;
 
 import java.util.Objects;
@@ -7,6 +9,7 @@ public class User {
     private String username;
     private String login;
 
+    //конструктор
     public User(int id, String username, String login) {
         this.id = id;
         this.username = username;
@@ -37,6 +40,7 @@ public class User {
         this.login = login;
     }
 
+    //в таком виде будет выводиться список друзей онлайн
     @Override
     public String toString() {
         return id +

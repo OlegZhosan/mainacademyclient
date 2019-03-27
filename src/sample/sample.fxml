@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
@@ -10,36 +11,45 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
-   <center>
-      <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
-          <tabs>
-              <Tab closable="false" text="User Login">
-                  <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                          <children>
-                              <TextField fx:id="loginField" layoutX="181.0" layoutY="121.0" prefHeight="25.0" prefWidth="238.0" promptText="login" />
-                              <PasswordField fx:id="passwordField" layoutX="182.0" layoutY="161.0" prefHeight="25.0" prefWidth="237.0" promptText="password" />
-                              <Button fx:id="enterButton" layoutX="254.0" layoutY="198.0" mnemonicParsing="false" onAction="#processLogin" prefHeight="49.0" prefWidth="94.0" text="Enter" />
-                              <Button layoutX="229.0" layoutY="281.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Register!" />
-                          </children>
-                  </AnchorPane>
-                  </content>
-                  <graphic>
-                      <AnchorPane prefHeight="0.0" prefWidth="0.0" />
-                  </graphic>
-              </Tab>
-          </tabs>
-      </TabPane>
-   </center>
-   <left>
-      <ListView fx:id="userList" prefHeight="400.0" prefWidth="134.0" BorderPane.alignment="CENTER" />
-   </left>
-   <top>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button fx:id="friendListButton" disable="true" mnemonicParsing="false" onAction="#showOnlineFriends" text="Друзья онлайн" />
-        </items>
-      </ToolBar>
-   </top>
+<BorderPane xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+    <center>
+        <TabPane fx:id="idTabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab fx:id="idUserLogin" closable="false" text="User Login">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TextField fx:id="loginField" layoutX="181.0" layoutY="121.0" prefHeight="25.0" prefWidth="238.0" promptText="login" />
+                                <PasswordField fx:id="passwordField" layoutX="182.0" layoutY="161.0" prefHeight="25.0" prefWidth="237.0" promptText="password" />
+                                <Button fx:id="enterButton" layoutX="254.0" layoutY="198.0" mnemonicParsing="false" onAction="#processLogin" prefHeight="49.0" prefWidth="94.0" text="Enter" />
+                                <Button layoutX="229.0" layoutY="281.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Register!" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                    <graphic>
+                        <AnchorPane prefHeight="0.0" prefWidth="0.0" />
+                    </graphic>
+                </Tab>
+                <Tab fx:id="idDialog" text="Dialog">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    </content>
+                </Tab>
+            </tabs>
+            <cursor>
+                <Cursor fx:constant="DEFAULT" />
+            </cursor>
+        </TabPane>
+    </center>
+    <left>
+        <ListView fx:id="userList" prefHeight="400.0" prefWidth="134.0" BorderPane.alignment="CENTER" />
+    </left>
+    <top>
+        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <items>
+                <Button fx:id="friendListButton" disable="true" mnemonicParsing="false" onAction="#showOnlineFriends" text="Друзья онлайн" />
+                <Button fx:id="idExit" mnemonicParsing="false" onAction="#processExit" style="-fx-background-color: #456784;" text="Exit" />
+            </items>
+        </ToolBar>
+    </top>
 </BorderPane>
