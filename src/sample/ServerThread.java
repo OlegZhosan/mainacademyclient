@@ -1,5 +1,3 @@
-//реализация работы клиента с сервером
-
 package sample;
 
 import java.io.BufferedReader;
@@ -19,13 +17,14 @@ public class ServerThread extends Thread {
     String login;
     String password;
     Properties props;//соединение со стандартным классом Properties
-
     BufferedReader reader;
     PrintWriter writer;
 
+    //конструктор
+    //создает поток
     public ServerThread(Controller mainController) {
-        this.mainController = mainController;//???
-        props = new Properties();//???
+        this.mainController = mainController;
+        props = new Properties();
         try {
             props.load(Files.newBufferedReader(Paths.get("client.cfg")));//вытягивание свойств подключения к серверу из файла "client.cfg"
         } catch (IOException e) {
@@ -35,26 +34,19 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        try (Socket socket = new Socket(
-                props.getProperty("host"),//вытягивание свойств подключения к серверу из файла "client.cfg"
-                Integer.parseInt(props.getProperty("port", "1234"))//вытягивание свойств подключения к серверу из файла "client.cfg"
-                //1234 - значение для порта по умолчанию
-        )) {
+        //вытягивание свойств подключения к серверу из файла "client.cfg"
+        try (Socket socket = new Socket(props.getProperty("host"), Integer.parseInt(props.getProperty("port", "1234"))))
+        //Socket - подключение к серверу
+        {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            //(new InputStreamReader(socket.getInputStream()))???
             writer = new PrintWriter(socket.getOutputStream(), true);
-            String line = reader.readLine();//строка, получаемая от сервера
-
-            //залогинится
+            String line = reader.readLine();//полученное от сервера сообщение
             if (! "Server Ok".equals(line)) return;//если от сервера не получена строка "Server Ok" - возврат отсюда
-            writer.println(String.join(";", "login", login, password));//???
-
-            //добавление в список потоков онлайн???
-
-            line = reader.readLine();//???
+            writer.println(String.join(";", "login", login, password));
+            line = reader.readLine();//полученное от сервера сообщение
+            System.out.println(line);
             if (! "Login Ok".equals(line)) return;//если от сервера не получена строка "Login Ok" - возврат отсюда
-
-            processMessages(reader, writer);//???
+            processMessages(reader, writer);//переходит к методу обработки сообщений от сервера
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,9 +83,5 @@ public class ServerThread extends Thread {
     //вызов списка пользователей онлайн по нажатию на кнопку???
     public void showFriendsOnline() {
         writer.println("<<<");
-    }
-
-    public void processExit() {
-        writer.println(">>>exit<<<");
     }
 }
