@@ -1,35 +1,33 @@
-//"чертеж" клиента для вывода списка друзей онлайн???
-
 package sample;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
-    private int id;
-    private String username;
+    private String id;
     private String login;
+    private String password;
+    private String username;
+    private LocalDate birthday;
+    private String city;
+    private String description;
 
-    //конструктор
-    public User(int id, String username, String login) {
+    public User(String id, String login, String password, String username, LocalDate birthday, String city, String description) {
         this.id = id;
-        this.username = username;
         this.login = login;
+        this.password = password;
+        this.username = username;
+        this.birthday = birthday;
+        this.city = city;
+        this.description = description;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getLogin() {
@@ -40,12 +38,44 @@ public class User {
         this.login = login;
     }
 
-    //в таком виде будет выводиться список друзей онлайн
-    @Override
-    public String toString() {
-        return id +
-                ") " + username +
-                " : " + login;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -53,13 +83,26 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
+        return Objects.equals(id, user.id) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(password, user.password) &&
                 Objects.equals(username, user.username) &&
-                Objects.equals(login, user.login);
+                Objects.equals(birthday, user.birthday) &&
+                Objects.equals(city, user.city) &&
+                Objects.equals(description, user.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, login);
+        return Objects.hash(id, login, password, username, birthday, city, description);
+    }
+
+    @Override
+    public String toString() {
+        return "User{ " +
+                "id='" + id + '\n' +
+                username + '\n' +
+                "birthday=" + birthday + '\n' +
+                "city='" + city + "' }";
     }
 }

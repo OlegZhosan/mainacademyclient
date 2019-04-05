@@ -1,87 +1,131 @@
 package sample;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class ServerThread extends Thread {
 
-    Controller mainController;//соединение с классом Controller
-    String login;
-    String password;
-    Properties props;//соединение со стандартным классом Properties
-    BufferedReader reader;
-    PrintWriter writer;
+    private static Socket clientSocket; //сокет для общения
+    private static BufferedReader in; // поток чтения из сокета
+    private static BufferedWriter out; // поток записи в сокет
+    private static BufferedReader reader;//reader считывет из консоли
 
-    //конструктор
-    //создает поток
-    public ServerThread(Controller mainController) {
-        this.mainController = mainController;
-        props = new Properties();
-        try {
-            props.load(Files.newBufferedReader(Paths.get("client.cfg")));//вытягивание свойств подключения к серверу из файла "client.cfg"
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    Controller controller;
+    String loginRecipient;
+
+    public ServerThread(Controller controller) {
+        this.controller = controller;
     }
 
-    @Override
     public void run() {
-        //вытягивание свойств подключения к серверу из файла "client.cfg"
-        try (Socket socket = new Socket(props.getProperty("host"), Integer.parseInt(props.getProperty("port", "1234"))))
-        //Socket - подключение к серверу
-        {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            writer = new PrintWriter(socket.getOutputStream(), true);
-            String line = reader.readLine();//полученное от сервера сообщение
-            if (! "Server Ok".equals(line)) return;//если от сервера не получена строка "Server Ok" - возврат отсюда
-            writer.println(String.join(";", "login", login, password));
-            line = reader.readLine();//полученное от сервера сообщение
-            System.out.println(line);
-            if (! "Login Ok".equals(line)) return;//если от сервера не получена строка "Login Ok" - возврат отсюда
-            processMessages(reader, writer);//переходит к методу обработки сообщений от сервера
+        try {
+            try {
+                clientSocket = new Socket("localhost", 1234);
+                reader = new BufferedReader(new InputStreamReader(System.in));
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                out.write("Client OK" + "\n");
+                out.flush();
+                while (true) {
+                    String message = in.readLine();
+                    if (message.startsWith("[")){
+                        getOnlineUsers(message);
+                    } else if (message.startsWith("new")){
+                        System.out.println(message);
+                        controller.messageFromClient = message;
+                    } else System.out.println(message);
+                    String word = reader.readLine();
+                    out.write(word + "\n");
+                    out.flush();
+                }
+            } finally {
+                clientSocket.close();
+                in.close();
+                out.close();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println(e);
         }
     }
 
-    //метод обработки полученного сообщения
-    private void processMessages(BufferedReader reader, PrintWriter writer) throws IOException {
-        String line;
-        while ((line=reader.readLine())!=null) {//пока полученное сообщение что то содержит
-            // 1 - обычное сообщение от другого клиента
-            //TODO обработать и отобразить сообщение
-
-            // 2 - сообщение от сервера
-            if ("<<<".equals(line)) {//если полученное сообщение содержит "<<<"
-                List<User> users = new ArrayList<>();//создай ArrayList из User
-                while(!(line=reader.readLine()).equals("<<<")) {//пока полеченное сообщение не содержит "<<<"
-                    String[] s = line.split(";");//разделяй полученные строки по символу ";"
-                    User u = new User(Integer.parseInt(s[0]), s[1], s[2]);//приесвоение значений обьекту User
-                    users.add(u);//добавляй этот обьект в с список users
-                }
-                mainController.showList(users);//вызов метода showList
+    private void getOnlineUsers(String message) {
+        List<User> onlineUsers = new ArrayList<>();
+        String onlineUsersMessage = message.substring(1, message.length() - 1);
+        String[] users = onlineUsersMessage.split(",");
+        for (int i = 0; i < users.length; i++) {
+            try {
+                String[] s = users[i].split(":");
+                String id = s[0];
+                String login  = s[1];
+                String password = s[2];
+                String username = s[3];
+                String dateStr = s[4];
+                String[] split = dateStr.split("\\D");
+                LocalDate birthday = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+                String city = s[5];
+                String description = s[6];
+                User user = new User(id, login, password, username, birthday, city, description);
+                onlineUsers.add(user);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
         }
+        for (User onlineUser : onlineUsers) {
+            System.out.println(onlineUser);
+        }
+        controller.showList(onlineUsers);
     }
 
-    //залогинивание???
-    public void setLoginPassword(String login, String password) {
-        this.login = login;
-        this.password = password;
+    public void register(String registration) throws IOException {
+        out.write(registration + "\n");
+        out.flush();
+        String message = in.readLine();
+        System.out.println(message);
     }
 
-    //метод кнопки вывода списка друзей онлайн
-    //передает серверу строку "<<<"
-    //вызов списка пользователей онлайн по нажатию на кнопку???
-    public void showFriendsOnline() {
-        writer.println("<<<");
+    public void login(String entrance) throws IOException {
+        out.write(entrance + "\n");
+        out.flush();
+        String message = in.readLine();
+        String[] s = message.split(":");
+        String id = s[0];
+        String login  = s[1];
+        String password = s[2];
+        String username = s[3];
+        String dateStr = s[4];
+        String[] split = dateStr.split("\\D");
+        LocalDate birthday = LocalDate.of(Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2]));
+        String city = s[5];
+        String description = s[6];
+        User user = new User(id, login, password, username, birthday, city, description);
+        String loginRecipient = user.getLogin();
+        this.loginRecipient = loginRecipient;
+        System.out.println(user);
+        controller.userLabel.setText(user.toString());
+        controller.inclusionButtonsOn();
+    }
+
+    public void output(String output) throws IOException {
+        out.write(output + "\n");
+        out.flush();
+        String message = in.readLine();
+        System.out.println(message);
+        controller.inclusionButtonsOff();
+    }
+
+    public void online(String online) throws IOException {
+        out.write(online + "\n");
+        out.flush();
+        String message = in.readLine();
+        getOnlineUsers(message);
+    }
+
+    public void correspondence(String correspondence) throws IOException {
+        System.out.println(correspondence);
+        out.write(correspondence + "\n");
+        out.flush();
     }
 }

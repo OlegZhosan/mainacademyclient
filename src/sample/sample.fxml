@@ -1,45 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
     <center>
-        <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
+        <TabPane fx:id="tabPane" prefHeight="320.0" prefWidth="392.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
-                <Tab closable="false" text="User Login">
+                <Tab text="Login">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <TextField fx:id="loginField" layoutX="181.0" layoutY="121.0" prefHeight="25.0" prefWidth="238.0" promptText="login" />
-                                <PasswordField fx:id="passwordField" layoutX="182.0" layoutY="161.0" prefHeight="25.0" prefWidth="237.0" promptText="password" />
-                                <Button fx:id="enterButton" layoutX="254.0" layoutY="198.0" mnemonicParsing="false" onAction="#processLogin" prefHeight="49.0" prefWidth="94.0" text="Enter" />
-                                <Button layoutX="229.0" layoutY="281.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="143.0" text="Register!" />
+                                <TextField fx:id="loginForLoginField" layoutX="88.0" layoutY="80.0" promptText="login" />
+                                <PasswordField fx:id="passwordForLoginField" layoutX="88.0" layoutY="125.0" promptText="password" />
+                                <Button fx:id="loginButton" disable="true" layoutX="137.0" layoutY="188.0" mnemonicParsing="false" onAction="#loginButton" prefHeight="36.0" prefWidth="77.0" text="Login" />
+                            </children></AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Registration">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="364.0" prefWidth="471.0">
+                            <children>
+                                <TextField fx:id="loginField" layoutX="109.0" layoutY="14.0" promptText="lognin" />
+                                <PasswordField fx:id="passwordField" layoutX="109.0" layoutY="55.0" promptText="password" />
+                                <TextField fx:id="usernameField" layoutX="109.0" layoutY="92.0" promptText="username" />
+                                <TextField fx:id="birthdayField" layoutX="109.0" layoutY="129.0" promptText="yyyy-mm-dd" />
+                                <TextField fx:id="cityField" layoutX="109.0" layoutY="165.0" promptText="city" />
+                                <TextField fx:id="descriptionField" layoutX="109.0" layoutY="205.0" prefHeight="87.0" prefWidth="175.0" promptText="description" />
+                                <Button layoutX="133.0" layoutY="299.0" mnemonicParsing="false" onAction="#registrationButton" prefHeight="30.0" prefWidth="127.0" text="Registration" />
                             </children>
                         </AnchorPane>
                     </content>
-                    <graphic>
-                        <AnchorPane prefHeight="0.0" prefWidth="0.0" />
-                    </graphic>
+                </Tab>
+                <Tab fx:id="messagingTab" text="Messaging">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TextField fx:id="messageField" layoutX="9.0" layoutY="287.0" prefHeight="48.0" prefWidth="290.0" promptText="message" />
+                                <Button layoutX="313.0" layoutY="296.0" mnemonicParsing="false" onAction="#sendMessageButton" prefHeight="30.0" prefWidth="70.0" text="Send" />
+                                <Label fx:id="messageLabel" layoutX="14.0" layoutY="22.0" prefHeight="29.0" prefWidth="258.0" />
+                                <Button layoutX="272.0" layoutY="22.0" mnemonicParsing="false" onAction="#getMessageButton" prefHeight="30.0" prefWidth="108.0" text="Get Message" />
+                            </children></AnchorPane>
+                    </content>
                 </Tab>
             </tabs>
         </TabPane>
     </center>
-    <left>
-        <ListView fx:id="userList" prefHeight="400.0" prefWidth="134.0" BorderPane.alignment="CENTER" />
-    </left>
     <top>
-        <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <items>
-                <Button fx:id="friendListButton" disable="true" mnemonicParsing="false" onAction="#showOnlineFriends" text="Друзья онлайн" />
-            </items>
-        </ToolBar>
+        <AnchorPane prefHeight="163.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="startButton" layoutX="434.0" layoutY="29.0" mnemonicParsing="false" onAction="#startSeverThread" prefHeight="30.0" prefWidth="89.0" text="Start" />
+                <Label fx:id="userLabel" layoutX="22.0" layoutY="13.0" prefHeight="111.0" prefWidth="346.0" />
+                <Button fx:id="outputButton" disable="true" layoutX="433.0" layoutY="75.0" mnemonicParsing="false" onAction="#outputButton" prefHeight="30.0" prefWidth="91.0" text="Output" />
+            </children>
+        </AnchorPane>
     </top>
+    <left>
+        <AnchorPane prefHeight="414.0" prefWidth="208.0" BorderPane.alignment="CENTER">
+            <children>
+                <ListView fx:id="onlineUsersList" layoutX="9.0" layoutY="54.0" prefHeight="319.0" prefWidth="190.0" />
+                <Button fx:id="onlineUsersButton" disable="true" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#onlineUsers" prefHeight="30.0" prefWidth="66.0" text="Online" />
+                <Button fx:id="messagingButton" disable="true" layoutX="93.0" layoutY="14.0" mnemonicParsing="false" onAction="#goToMessaging" text="Messaging" />
+            </children></AnchorPane>
+    </left>
 </BorderPane>

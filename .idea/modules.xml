@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/mainacademyclient.iml" filepath="$PROJECT_DIR$/mainacademyclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mainacademyClient.iml" filepath="$PROJECT_DIR$/mainacademyClient.iml" />
     </modules>
   </component>
 </project>
